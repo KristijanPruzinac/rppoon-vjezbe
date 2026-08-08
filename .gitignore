@@ -23,6 +23,7 @@ TestResults/
 media/
 study/extracted_text/
 study/allcs.txt
+study/ispiti_prijepis.md
 *.pdf
 *.pptx
 *.zip
