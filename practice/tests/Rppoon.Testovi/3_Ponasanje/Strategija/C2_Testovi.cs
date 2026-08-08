@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using NUnit.Framework;
 using Rppoon.Testovi.Alati;
@@ -6,6 +6,7 @@ using Rppoon.Testovi.Alati;
 namespace Rppoon.Testovi.Strategija
 {
     [TestFixture]
+    [Category("Ponasanje")]
     [Category("Strategija")]
     [Category("C")]
     public class C2_Testovi

@@ -1,10 +1,11 @@
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Rppoon.Testovi.Alati;
 using Rppoon.Zadaci.Strategija.A2;
 
 namespace Rppoon.Testovi.Strategija
 {
     [TestFixture]
+    [Category("Ponasanje")]
     [Category("Strategija")]
     [Category("A")]
     public class A2_Testovi

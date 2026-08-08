@@ -33,16 +33,46 @@ dotnet test practice/Rppoon.Practice.sln --filter "TestCategory=C"
 Visual Studio **nije** potreban — projekti su SDK-style i rade iz terminala
 na Windowsu, Linuxu i macOS-u.
 
+## Što sam riješio?
+
+```powershell
+pwsh ./practice/napredak.ps1
+```
+
+Ispisuje sva 23 obrasca redom kojim se obrađuju na predavanjima, i za svaki
+šest zadataka:
+
+```
+STVARANJE
+Obrazac            A1  A2  B1  B2  C1  C2
+Singleton          [+] [+] [~] [ ] [ ] [ ]
+MetodaTvornica      .   .   .   .   .   .   jos nije pripremljen
+```
+
+`[+]` riješeno · `[~]` djelomično · `[ ]` nezapočeto · `.` zadatak još ne postoji
+
+Ne moraš ići redom — svaki zadatak stoji sam za sebe:
+
+```bash
+pwsh ./practice/napredak.ps1 -Skupina Struktura
+pwsh ./practice/napredak.ps1 -Obrazac Singleton
+dotnet test --filter "TestCategory=Stvaranje&TestCategory=A"
+```
+
 ## Kako je posloženo
+
+Obrasci su grupirani kao na predavanjima — **stvaranje → struktura → ponašanje**:
 
 ```
 practice/
   src/Rppoon.Zadaci/
-    Zadaci/<Obrazac>/     <- OVDJE PIŠEŠ
-    Rjesenja/<Obrazac>/   <- referentno rješenje (pogledaj tek nakon pokušaja)
-  tests/Rppoon.Testovi/
-    <Obrazac>/            <- testovi; njih ne diraš
-  provjeri.ps1
+    Zadaci/1_Stvaranje/Singleton/      <- OVDJE PIŠEŠ
+    Zadaci/3_Ponasanje/Strategija/
+    Rjesenja/…                         <- referentno rješenje (nakon pokušaja)
+    RjesenjaAlt/…                      <- isto riješeno drukčije
+  tests/Rppoon.Testovi/1_Stvaranje/…   <- testovi; njih ne diraš
+  napredak.ps1                         <- što si riješio
+  provjeri.ps1                         <- jesu li testovi ispravni
 ```
 
 Obje mape koriste **iste** prostore imena i nazive tipova, pa se isti testovi

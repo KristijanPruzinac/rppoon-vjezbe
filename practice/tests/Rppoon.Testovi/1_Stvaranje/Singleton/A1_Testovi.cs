@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -9,6 +9,7 @@ using Rppoon.Zadaci.Singleton.A1;
 namespace Rppoon.Testovi.Singleton
 {
     [TestFixture]
+    [Category("Stvaranje")]
     [Category("Singleton")]
     [Category("A")]
     public class A1_Testovi

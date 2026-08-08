@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -8,6 +8,7 @@ using Rppoon.Zadaci.Singleton.B2;
 namespace Rppoon.Testovi.Singleton
 {
     [TestFixture]
+    [Category("Stvaranje")]
     [Category("Singleton")]
     [Category("B")]
     public class B2_Testovi

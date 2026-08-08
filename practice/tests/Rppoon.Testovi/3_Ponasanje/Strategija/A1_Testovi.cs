@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NUnit.Framework;
 using Rppoon.Testovi.Alati;
 using Rppoon.Zadaci.Strategija.A1;
@@ -6,6 +6,7 @@ using Rppoon.Zadaci.Strategija.A1;
 namespace Rppoon.Testovi.Strategija
 {
     [TestFixture]
+    [Category("Ponasanje")]
     [Category("Strategija")]
     [Category("A")]
     public class A1_Testovi

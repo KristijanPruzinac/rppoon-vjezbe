@@ -113,8 +113,10 @@ foreach ($zadatak in $zadaci) {
     # prolaz u drugom pokretanju nista ne dokazuje - vrtio se isti kod.
     $imaAlt = $false
     if (Test-Path $mapaAlt) {
-        $imaAlt = @(Get-ChildItem -Path (Join-Path $mapaAlt $obrazacZadatka) `
-                                  -Filter "$($prefiks)_*.cs" -ErrorAction SilentlyContinue).Count -gt 0
+        # Trazi rekurzivno jer su zadaci grupirani po skupinama
+        # (1_Stvaranje / 2_Struktura / 3_Ponasanje).
+        $imaAlt = @(Get-ChildItem -Path $mapaAlt -Recurse -Filter "$($prefiks)_*.cs" -ErrorAction SilentlyContinue |
+                    Where-Object { $_.Directory.Name -eq $obrazacZadatka }).Count -gt 0
     }
 
     $rjesenjeZeleno = ($uRjesenju | Where-Object { $_.Value -ne "Passed" }).Count -eq 0
