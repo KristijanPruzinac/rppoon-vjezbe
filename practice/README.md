@@ -78,20 +78,52 @@ provjeravamo i građu:
 
 Ti testovi nose prefiks `Gradja_`.
 
+## „A što ako riješim drukčije nego autor?"
+
+Prava opasnost ovakvih zadataka: test skrojen točno po autorovu rješenju, pa
+student koji obrazac primijeni **ispravno ali drukčije** — padne. Protiv toga
+svaki zadatak ima **dva neovisno napisana rješenja**, i testovi moraju
+prihvatiti oba:
+
+```bash
+dotnet test practice/Rppoon.Practice.sln -p:Rjesenja=true   # referentno
+dotnet test practice/Rppoon.Practice.sln -p:Rjesenja=alt    # napisano drukčije
+```
+
+Primjer — isti zadatak, dva puta:
+
+| | referentno | alternativno |
+|---|---|---|
+| postotni popust | `amount - amount * p / 100` | množitelj `1 - p/100` u konstruktoru |
+| zbroj stavki | `foreach` petlja | `prices.Sum()` |
+| kontekst drži strategiju | automatsko svojstvo | izričito polje + `get/set` |
+| provjera znamenke | `foreach` + `char.IsDigit` | `input.Any(char.IsDigit)` |
+
+Ako oba prolaze, test provjerava **obrazac**, a ne autorov stil.
+
+Testovi su k tome popustljivi gdje zadatak ništa nije propisao: `Total()` i
+`Total { get; }` jednako vrijede, svojstvo i javno polje jednako vrijede.
+Strogi su samo ondje gdje tekst zadatka izričito traži naziv ili potpis.
+
 ## Kako znam da su testovi ispravni
 
 ```powershell
 pwsh ./practice/provjeri.ps1
 ```
 
-Svaki zadatak mora proći dvije provjere:
+Svaki zadatak prolazi kroz **tri** pokretanja istih testova:
 
-1. **rješenje zeleno** — testovi protiv referentnog rješenja svi prolaze
+1. **rješenje zeleno** — protiv referentnog rješenja svi prolaze
    (dokaz da zadatak uopće ima rješenje: nema nemoguće tvrdnje, krivog iznosa)
-2. **kostur crven** — isti testovi protiv nedovršenog kostura, barem jedan pada
+2. **alternativa zelena** — protiv drukčije napisanog rješenja svi prolaze
+   (dokaz da test nije prilijepljen uz jedan način pisanja)
+3. **kostur crven** — protiv nedovršenog kostura barem jedan pada
    (dokaz da test nije prazan — test koji prolazi na praznom kodu ništa ne uči)
 
-Dodatno pada ako neki test **ponašanja** (naziv ne počinje s `Gradja_`) prolazi
-na praznom kosturu. Testovi građe smiju proći — na razini A građa je poklonjena.
+Pada i ako neki test **ponašanja** (naziv ne počinje s `Gradja_`) prolazi na
+praznom kosturu. Testovi građe smiju proći — na razini A građa je poklonjena.
+
+Ako zadatak nema alternativno rješenje, skripta to **prijavi** umjesto da tiho
+javi zeleno — inače bi drugo pokretanje vrtjelo isti kod i ništa ne dokazivalo.
 
 Isto se vrti u GitHub Actions pri svakom `push`-u.

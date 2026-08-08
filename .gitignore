@@ -8,12 +8,24 @@ obj/
 practice/.provjera/
 TestResults/
 
-# Nastavni materijali s kolegija (predavanja, vjezbe, izvorni projekti).
-# NAMJERNO se ne objavljuju: tudi su autorski rad i nisu nasi za dijeliti.
-# Datoteke ostaju lokalno, samo ne odlaze na GitHub.
+# ---------------------------------------------------------------
+#  NE OBJAVLJUJE SE
+#
+#  Nastavni materijali kolegija (predavanja, vjezbe, izvorni
+#  projekti) i primjeri pismenog ispita ostaju samo lokalno.
+#  Tudi su autorski rad, a ispitni primjeri su osjetljivi:
+#  nositelj kolegija dopustio je koristenje za ucenje, ali javna
+#  objava snimaka nije u redu.
+#
+#  Scenariji u practice/ su izmisljeni (porez, dostava, sazimanje)
+#  i ne sadrze nista s ispita.
+# ---------------------------------------------------------------
 media/
 study/extracted_text/
 study/allcs.txt
 *.pdf
 *.pptx
 *.zip
+*.png
+*.jpg
+*.jpeg

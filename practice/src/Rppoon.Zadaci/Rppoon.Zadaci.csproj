@@ -10,20 +10,36 @@
   </PropertyGroup>
 
   <!--
-    Jedan projekt, dvije inacice koda:
+    Jedan projekt, tri inacice koda pod istim prostorima imena:
 
-      dotnet test                      -> prevodi Zadaci/   (tvoj kod, testovi moraju PASTI)
-      dotnet test -p:Rjesenja=true     -> prevodi Rjesenja/ (referentno rjesenje, testovi moraju PROCI)
+      dotnet test                      -> Zadaci/       (tvoj kod, testovi moraju PASTI)
+      dotnet test -p:Rjesenja=true     -> Rjesenja/     (referentno rjesenje, mora PROCI)
+      dotnet test -p:Rjesenja=alt      -> RjesenjaAlt/  (DRUGACIJE napisano rjesenje, mora PROCI)
 
-    Oba stabla koriste iste nazive prostora imena i tipova, pa se isti
-    testni projekt prevodi protiv bilo koje inacice.
+    Treca inacica postoji zbog jednog konkretnog straha: da test bude
+    skrojen tocno po mom rjesenju, pa da student koji obrazac primijeni
+    ispravno ali drugacije - padne. Ako isti testovi prihvate dva
+    neovisno napisana rjesenja, nisu prilijepljeni uz jedno.
   -->
   <ItemGroup Condition="'$(Rjesenja)' == 'true'">
     <Compile Remove="Zadaci/**/*.cs" />
+    <Compile Remove="RjesenjaAlt/**/*.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(Rjesenja)' != 'true'">
+  <ItemGroup Condition="'$(Rjesenja)' == 'alt'">
+    <Compile Remove="Zadaci/**/*.cs" />
+    <!--
+      Uzmi sve iz RjesenjaAlt/, a iz Rjesenja/ izbaci tocno one datoteke
+      za koje alternativa postoji. Zadaci bez alternative i dalje dolaze
+      iz Rjesenja/, pa se projekt uvijek prevodi u cijelosti.
+    -->
+    <AlternativnaDatoteka Include="RjesenjaAlt/**/*.cs" />
+    <Compile Remove="@(AlternativnaDatoteka->'Rjesenja/%(RecursiveDir)%(Filename)%(Extension)')" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Rjesenja)' != 'true' AND '$(Rjesenja)' != 'alt'">
     <Compile Remove="Rjesenja/**/*.cs" />
+    <Compile Remove="RjesenjaAlt/**/*.cs" />
   </ItemGroup>
 
 </Project>

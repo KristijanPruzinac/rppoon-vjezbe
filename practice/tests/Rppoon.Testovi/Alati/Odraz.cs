@@ -139,13 +139,30 @@ namespace Rppoon.Testovi.Alati
             }
         }
 
-        /// <summary>Poziva metodu po imenu; jasna poruka ako metoda ne postoji.</summary>
+        /// <summary>
+        /// Poziva metodu po imenu. Ako metode nema, a postoji svojstvo istog
+        /// imena bez parametara, uzima njega.
+        ///
+        /// Zasto popustljivo: "Total()" i "Total { get; }" jednako dobro
+        /// rjesavaju zadatak. Test smije traziti REZULTAT, ali ne smije
+        /// obarati studenta zbog izbora koji zadatak nije propisao.
+        /// </summary>
         public static object Pozovi(object primjerak, string nazivMetode, params object[] argumenti)
         {
             Type tip = primjerak.GetType();
             MethodInfo metoda = tip.GetMethods(BindingFlags.Instance | BindingFlags.Public)
                                    .FirstOrDefault(m => m.Name == nazivMetode &&
                                                         m.GetParameters().Length == argumenti.Length);
+
+            if (metoda == null && argumenti.Length == 0)
+            {
+                PropertyInfo svojstvo = tip.GetProperty(nazivMetode, BindingFlags.Instance | BindingFlags.Public);
+                if (svojstvo != null && svojstvo.CanRead)
+                {
+                    metoda = svojstvo.GetGetMethod();
+                }
+            }
+
             if (metoda == null)
             {
                 string imena = string.Join(", ", tip.GetMethods(BindingFlags.Instance | BindingFlags.Public)
@@ -168,16 +185,32 @@ namespace Rppoon.Testovi.Alati
             }
         }
 
-        /// <summary>Postavlja javno svojstvo po imenu (zamjena strategije, stanja...).</summary>
+        /// <summary>
+        /// Postavlja javno svojstvo po imenu (zamjena strategije, stanja...).
+        /// Prihvaca i javno polje istog imena - i jedno i drugo zadovoljava
+        /// zahtjev "mora se moci zamijeniti u hodu".
+        /// </summary>
         public static void Postavi(object primjerak, string nazivSvojstva, object vrijednost)
         {
             Type tip = primjerak.GetType();
+
             PropertyInfo svojstvo = tip.GetProperty(nazivSvojstva, BindingFlags.Instance | BindingFlags.Public);
-            if (svojstvo == null || !svojstvo.CanWrite)
+            if (svojstvo != null && svojstvo.CanWrite)
             {
-                Assert.Fail($"Razred '{tip.Name}' nema javno svojstvo '{nazivSvojstva}' s postavljacem (set).");
+                svojstvo.SetValue(primjerak, vrijednost);
+                return;
             }
-            svojstvo.SetValue(primjerak, vrijednost);
+
+            FieldInfo polje = tip.GetField(nazivSvojstva, BindingFlags.Instance | BindingFlags.Public);
+            if (polje != null && !polje.IsInitOnly)
+            {
+                polje.SetValue(primjerak, vrijednost);
+                return;
+            }
+
+            Assert.Fail(
+                $"Razred '{tip.Name}' nema javno svojstvo ni polje '{nazivSvojstva}' koje se moze postaviti.\n" +
+                "Zadatak trazi da se moze zamijeniti u hodu, npr. 'public ITaxStrategy Strategy { get; set; }'.");
         }
 
         private static string PotpisKonstruktora(ConstructorInfo k)
