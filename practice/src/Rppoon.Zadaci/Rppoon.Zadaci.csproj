@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <!-- Studenti smiju imati nedovrsen kod dok rjesavaju; upozorenja ne rusi build. -->
+    <NoWarn>$(NoWarn);CS0169;CS0649;CS0414;CS8321</NoWarn>
+  </PropertyGroup>
+
+  <!--
+    Jedan projekt, dvije inacice koda:
+
+      dotnet test                      -> prevodi Zadaci/   (tvoj kod, testovi moraju PASTI)
+      dotnet test -p:Rjesenja=true     -> prevodi Rjesenja/ (referentno rjesenje, testovi moraju PROCI)
+
+    Oba stabla koriste iste nazive prostora imena i tipova, pa se isti
+    testni projekt prevodi protiv bilo koje inacice.
+  -->
+  <ItemGroup Condition="'$(Rjesenja)' == 'true'">
+    <Compile Remove="Zadaci/**/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Rjesenja)' != 'true'">
+    <Compile Remove="Rjesenja/**/*.cs" />
+  </ItemGroup>
+
+</Project>

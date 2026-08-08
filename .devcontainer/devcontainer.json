@@ -1,0 +1,17 @@
+{
+  "name": "RPPOON vjezbe (.NET 8)",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:1-8.0",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csdevkit",
+        "ms-dotnettools.csharp"
+      ],
+      "settings": {
+        "dotnet.defaultSolution": "practice/Rppoon.Practice.sln"
+      }
+    }
+  },
+  "postCreateCommand": "dotnet restore practice/Rppoon.Practice.sln",
+  "waitFor": "postCreateCommand"
+}

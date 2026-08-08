@@ -1,0 +1,25 @@
+name: Provjera zadataka
+
+on:
+  push:
+    paths: ["practice/**", ".github/workflows/provjera.yml"]
+  pull_request:
+    paths: ["practice/**"]
+  workflow_dispatch:
+
+jobs:
+  testovi:
+    name: Testovi moraju biti ispravni
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      # Ne provjerava je li kod studenta tocan, nego jesu li TESTOVI ispravni:
+      # referentno rjesenje mora biti zeleno, kostur mora biti crven.
+      - name: provjeri.ps1
+        shell: pwsh
+        run: ./practice/provjeri.ps1

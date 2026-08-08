@@ -1,0 +1,19 @@
+# .NET
+bin/
+obj/
+*.user
+.vs/
+
+# izlaz provjere
+practice/.provjera/
+TestResults/
+
+# Nastavni materijali s kolegija (predavanja, vjezbe, izvorni projekti).
+# NAMJERNO se ne objavljuju: tudi su autorski rad i nisu nasi za dijeliti.
+# Datoteke ostaju lokalno, samo ne odlaze na GitHub.
+media/
+study/extracted_text/
+study/allcs.txt
+*.pdf
+*.pptx
+*.zip
