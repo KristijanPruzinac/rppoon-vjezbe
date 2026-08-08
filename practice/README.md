@@ -103,8 +103,9 @@ provjeravamo i građu:
 | Strategija | kontekst drži član tipa sučelja, ne grana po vrsti |
 | Dekorater | dekorater implementira sučelje **i** drži član tog tipa (omata, ne nasljeđuje) |
 | Adapter | tip `Adaptee` nema referencu na ciljno sučelje |
-| Kompozit | list i kompozit dijele bazni tip |
+| Kompozit | list i kompozit dijele bazni tip; list **ne** drži zbirku komponenti |
 | Promatrač | odjava stvarno prestane slati obavijesti |
+| Lanac odgovornosti | karika vidi sljedeću samo kao apstraktni tip; klijent ne drži konkretne obrađivače |
 
 Ti testovi nose prefiks `Gradja_`.
 
