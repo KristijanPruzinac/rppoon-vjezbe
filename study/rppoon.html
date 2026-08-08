@@ -2408,7 +2408,7 @@ var processor = new OrderProcessor(<span class="hl">new FakeDb()</span>, <span c
         <table>
           <thead><tr><th>Oznaka u potpisu</th><th>Što je</th><th>Pouzdanost</th></tr></thead>
           <tbody>
-            <tr><td>„Službena struktura“ / dijagram s klasama i odjeljcima</td><td>UML dijagram prerisan s <em>Struktura</em> slajda predavanja, s istim imenima klasa i metoda</td><td><span class="chip g">provjereno prema slajdu</span></td></tr>
+            <tr><td>„Službena struktura“ / dijagram s klasama i odjeljcima</td><td>UML dijagram s <em>Struktura</em> slajda predavanja, s istim imenima klasa i metoda — svih 23 obrasca ima jedan</td><td><span class="chip g">provjereno prema slajdu</span> / <span class="chip w">standardna GoF struktura</span></td></tr>
             <tr><td>ostale slike (usporedbe, tokovi, „bez/s obrascem“)</td><td>moje ilustracije napravljene da pokažu problem — nisu na slajdovima</td><td><span class="caution">⚠ vlastita ilustracija</span></td></tr>
           </tbody>
         </table>
@@ -2443,6 +2443,32 @@ var processor = new OrderProcessor(<span class="hl">new FakeDb()</span>, <span c
     <div class="card">
       <h3>Singleton <span class="count">AKA Unique object</span></h3>
       <p class="lead">Osigurava da u sustavu postoji <strong>točno jedna</strong> instanca klase i pruža pristupnu točku toj instanci.</p>
+
+      <figure>
+        <svg class="uml" viewBox="0 0 700 200" role="img" aria-label="Struktura obrasca Singleton: jedna klasa s privatnim konstruktorom, statičkim poljem instance i statičkom pristupnom metodom; klijent do nje dolazi samo preko te metode.">
+          <rect class="box" x="40" y="66" width="150" height="52" rx="2"/>
+          <text class="t" x="115" y="90" text-anchor="middle">Client</text>
+          <text class="s" x="115" y="106" text-anchor="middle">KLIJENT</text>
+
+          <line class="rel dep" x1="192" y1="92" x2="250" y2="92"/>
+          <text class="s" x="221" y="84" text-anchor="middle">GetInstance()</text>
+
+          <rect class="box" x="254" y="20" width="290" height="146" rx="2"/>
+          <text class="t" x="399" y="38" text-anchor="middle">Singleton</text>
+          <line class="div" x1="254" y1="48" x2="544" y2="48"/>
+          <text class="m" x="266" y="64">- static instance: Singleton</text>
+          <text class="m" x="266" y="78">- data</text>
+          <line class="div" x1="254" y1="88" x2="544" y2="88"/>
+          <text class="m" x="266" y="104">- Singleton()</text>
+          <text class="m" x="266" y="118">+ static GetInstance(): Singleton</text>
+          <text class="m" x="266" y="132">+ Operation()</text>
+          <text class="s" x="399" y="152" text-anchor="middle">konstruktor je PRIVATAN</text>
+
+          <path class="rel assoc" d="M 546,60 H 596 V 128 H 548"/>
+          <text class="s" x="604" y="98">instance</text>
+        </svg>
+        <figcaption>Cijeli obrazac je <strong>jedna klasa</strong> — nema hijerarhije. Tri obavezna elementa: privatni konstruktor (nitko izvana ne može stvoriti instancu), statičko polje koje čuva jedinu instancu, i statička metoda koja je vraća. Petlja s desne strane je klasa koja drži referencu na samu sebe — na ispitu se Singleton prepoznaje upravo po njoj.</figcaption>
+      </figure>
 
       <figure>
         <svg viewBox="0 0 660 168" role="img" aria-label="Singleton drži privatnu statičku referencu na samog sebe; klijenti dobivaju istu instancu preko GetInstance.">
@@ -2600,6 +2626,46 @@ public static TS_DatabaseHelper GetInstance() {
       <p class="lead">Osnovna klasa propisuje <em>sučelje</em> za stvaranje, a izvedene klase odlučuju <strong>koji</strong> objekt nastaje.</p>
 
       <figure>
+        <svg class="uml" viewBox="0 0 700 285" role="img" aria-label="Struktura obrasca Metoda tvornica: apstraktni tvorac deklarira metodu tvornicu koja vraća proizvod, a konkretni tvorac je prepisuje i stvara konkretan proizvod.">
+          <rect class="box" x="40" y="24" width="250" height="90" rx="2"/>
+          <text class="t" x="165" y="42" text-anchor="middle">Creator</text>
+          <text class="s" x="165" y="56" text-anchor="middle">«abstract»</text>
+          <line class="div" x1="40" y1="64" x2="290" y2="64"/>
+          <text class="m" x="52" y="80">+ AnOperation()</text>
+          <text class="m" x="52" y="94"># FactoryMethod(): Product</text>
+          <text class="s" x="165" y="132" text-anchor="middle">TVORAC</text>
+
+          <rect class="box" x="40" y="180" width="250" height="62" rx="2"/>
+          <text class="t" x="165" y="198" text-anchor="middle">ConcreteCreator</text>
+          <line class="div" x1="40" y1="208" x2="290" y2="208"/>
+          <text class="m" x="52" y="224"># FactoryMethod(): Product</text>
+          <text class="s" x="165" y="262" text-anchor="middle">odlučuje KOJI proizvod nastaje</text>
+
+          <line class="rel gen" x1="165" y1="178" x2="165" y2="116"/>
+
+          <rect class="iface" x="420" y="24" width="230" height="90" rx="2"/>
+          <text class="s" x="535" y="42" text-anchor="middle">«interface»</text>
+          <text class="t" x="535" y="58" text-anchor="middle">Product</text>
+          <line class="div" x1="420" y1="68" x2="650" y2="68"/>
+          <text class="m" x="432" y="84">+ Operation()</text>
+          <text class="s" x="535" y="132" text-anchor="middle">PROIZVOD</text>
+
+          <rect class="box" x="420" y="180" width="230" height="62" rx="2"/>
+          <text class="t" x="535" y="198" text-anchor="middle">ConcreteProduct</text>
+          <line class="div" x1="420" y1="208" x2="650" y2="208"/>
+          <text class="m" x="432" y="224">+ Operation()</text>
+
+          <line class="rel real" x1="535" y1="178" x2="535" y2="116"/>
+
+          <line class="rel dep" x1="292" y1="90" x2="416" y2="90"/>
+          <text class="s" x="354" y="82" text-anchor="middle">vraća</text>
+          <line class="rel dep" x1="292" y1="210" x2="416" y2="210"/>
+          <text class="s" x="354" y="202" text-anchor="middle">stvara</text>
+        </svg>
+        <figcaption>Dvije paralelne hijerarhije: tvorci lijevo, proizvodi desno. Tvorac <em>obećava</em> proizvod tipa <code>Product</code>, ali ne zna koji — to odlučuje podklasa. Zato je jedina strelica koja pokazuje na konkretan proizvod ona iz <code>ConcreteCreator</code>: cijelo znanje o konkretnoj klasi zatvoreno je u jednoj metodi.</figcaption>
+      </figure>
+
+      <figure>
         <svg viewBox="0 0 660 200" role="img" aria-label="Apstraktni kreator deklarira apstraktnu metodu CreatePages; Resume i TechnicalReport je prepisuju i stvaraju različite konkretne stranice.">
           <defs><marker id="f-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
           <marker id="f-tri" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse"><path d="M0,0 L12,6 L0,12 z" fill="none" stroke="currentColor" stroke-width="1.4"/></marker></defs>
@@ -2690,6 +2756,55 @@ class TechnicalReport : Document { <span class="cm">/* svoje stranice */</span> 
     <div class="card">
       <h3>Apstraktna tvornica <span class="count">AKA Kit</span></h3>
       <p class="lead">Sučelje za stvaranje <strong>cijelih obitelji</strong> povezanih objekata, bez navođenja konkretnih klasa.</p>
+
+      <figure>
+        <svg class="uml" viewBox="0 0 700 232" role="img" aria-label="Struktura obrasca Apstraktna tvornica: sučelje tvornice s metodom po vrsti proizvoda, dvije konkretne tvornice kao dvije obitelji, i dvije hijerarhije proizvoda sa po dvije izvedbe.">
+          <rect class="iface" x="24" y="26" width="240" height="88" rx="2"/>
+          <text class="s" x="144" y="44" text-anchor="middle">«interface»</text>
+          <text class="t" x="144" y="60" text-anchor="middle">AbstractFactory</text>
+          <line class="div" x1="24" y1="68" x2="264" y2="68"/>
+          <text class="m" x="36" y="84">+ CreateProductA()</text>
+          <text class="m" x="36" y="98">+ CreateProductB()</text>
+
+          <line class="rel gen" x1="144" y1="136" x2="144" y2="116"/>
+          <line class="rel" x1="82" y1="136" x2="206" y2="136"/>
+          <line class="rel" x1="82" y1="136" x2="82" y2="164"/>
+          <line class="rel" x1="206" y1="136" x2="206" y2="164"/>
+          <rect class="box" x="24" y="164" width="116" height="30" rx="2"/>
+          <text class="t" x="82" y="184" text-anchor="middle">ConcreteFactory1</text>
+          <rect class="box" x="148" y="164" width="116" height="30" rx="2"/>
+          <text class="t" x="206" y="184" text-anchor="middle">ConcreteFactory2</text>
+          <text class="s" x="144" y="212" text-anchor="middle">jedna tvornica = jedna OBITELJ</text>
+
+          <rect class="iface" x="300" y="26" width="160" height="56" rx="2"/>
+          <text class="s" x="380" y="44" text-anchor="middle">«interface»</text>
+          <text class="t" x="380" y="62" text-anchor="middle">AbstractProductA</text>
+          <line class="rel gen" x1="380" y1="104" x2="380" y2="84"/>
+          <line class="rel" x1="337" y1="104" x2="421" y2="104"/>
+          <line class="rel" x1="337" y1="104" x2="337" y2="132"/>
+          <line class="rel" x1="421" y1="104" x2="421" y2="132"/>
+          <rect class="box" x="298" y="132" width="78" height="28" rx="2"/>
+          <text class="t" x="337" y="151" text-anchor="middle">ProductA1</text>
+          <rect class="box" x="382" y="132" width="78" height="28" rx="2"/>
+          <text class="t" x="421" y="151" text-anchor="middle">ProductA2</text>
+
+          <rect class="iface" x="510" y="26" width="160" height="56" rx="2"/>
+          <text class="s" x="590" y="44" text-anchor="middle">«interface»</text>
+          <text class="t" x="590" y="62" text-anchor="middle">AbstractProductB</text>
+          <line class="rel gen" x1="590" y1="104" x2="590" y2="84"/>
+          <line class="rel" x1="547" y1="104" x2="631" y2="104"/>
+          <line class="rel" x1="547" y1="104" x2="547" y2="132"/>
+          <line class="rel" x1="631" y1="104" x2="631" y2="132"/>
+          <rect class="box" x="508" y="132" width="78" height="28" rx="2"/>
+          <text class="t" x="547" y="151" text-anchor="middle">ProductB1</text>
+          <rect class="box" x="592" y="132" width="78" height="28" rx="2"/>
+          <text class="t" x="631" y="151" text-anchor="middle">ProductB2</text>
+
+          <line class="rel dep" x1="266" y1="52" x2="296" y2="52"/>
+          <path class="rel dep" d="M 264,38 H 280 V 12 H 590 V 22"/>
+        </svg>
+        <figcaption>Razlika prema <em>Metodi tvornici</em>: ondje jedna metoda pravi jedan proizvod, ovdje jedno sučelje pravi <strong>cijelu obitelj</strong>. <code>ConcreteFactory1</code> vraća isključivo <code>ProductA1</code> i <code>ProductB1</code> — to je jamstvo da se izvedbe iz različitih obitelji ne mogu pomiješati. Cijena je vidljiva u dijagramu: nova <em>vrsta</em> proizvoda znači novu metodu u sučelju i izmjenu svake konkretne tvornice.</figcaption>
+      </figure>
 
       <figure>
         <svg viewBox="0 0 680 210" role="img" aria-label="ContinentFactory deklarira CreateHerbivore i CreateCarnivore; AfricaFactory stvara Gazelle i Lion, EuropeFactory stvara GranadaHare i GreyWolf.">
@@ -3119,6 +3234,41 @@ copy.Author.Name = "Netko drugi";
       <p class="lead">Mijenja sučelje klase u ono koje klijent <em>očekuje</em>, da bi surađivale klase koje inače ne bi mogle.</p>
 
       <figure>
+        <svg class="uml" viewBox="0 0 700 262" role="img" aria-label="Struktura obrasca Adapter: klijent koristi ciljno sučelje, adapter ga ostvaruje i drži referencu na adaptirani razred čije je sučelje drukčije.">
+          <rect class="box" x="20" y="42" width="120" height="44" rx="2"/>
+          <text class="t" x="80" y="62" text-anchor="middle">Client</text>
+          <text class="s" x="80" y="78" text-anchor="middle">KLIJENT</text>
+          <line class="rel dep" x1="142" y1="64" x2="176" y2="64"/>
+
+          <rect class="iface" x="180" y="26" width="180" height="76" rx="2"/>
+          <text class="s" x="270" y="44" text-anchor="middle">«interface»</text>
+          <text class="t" x="270" y="60" text-anchor="middle">Target</text>
+          <line class="div" x1="180" y1="68" x2="360" y2="68"/>
+          <text class="m" x="192" y="84">+ Request()</text>
+          <text class="s" x="270" y="120" text-anchor="middle">sučelje koje klijent OČEKUJE</text>
+
+          <line class="rel real" x1="270" y1="148" x2="270" y2="104"/>
+
+          <rect class="box" x="180" y="150" width="180" height="76" rx="2"/>
+          <text class="t" x="270" y="168" text-anchor="middle">Adapter</text>
+          <line class="div" x1="180" y1="176" x2="360" y2="176"/>
+          <text class="m" x="192" y="192">- adaptee: Adaptee</text>
+          <text class="m" x="192" y="206">+ Request()</text>
+          <text class="s" x="270" y="248" text-anchor="middle">Request() → adaptee.SpecificRequest()</text>
+
+          <line class="rel assoc" x1="362" y1="188" x2="456" y2="188"/>
+          <text class="s" x="409" y="180" text-anchor="middle">adaptee</text>
+
+          <rect class="box" x="460" y="150" width="200" height="76" rx="2"/>
+          <text class="t" x="560" y="168" text-anchor="middle">Adaptee</text>
+          <line class="div" x1="460" y1="176" x2="660" y2="176"/>
+          <text class="m" x="472" y="192">+ SpecificRequest()</text>
+          <text class="s" x="560" y="248" text-anchor="middle">postojeći kôd — ne dira se</text>
+        </svg>
+        <figcaption>Ključno je da <code>Adaptee</code> nema <em>nijednu</em> strelicu prema gore: on ne zna da postoji <code>Target</code> i ne mijenja se. Adapter je jedini koji poznaje oba sučelja i prevodi između njih. Ovo je <strong>objektni adapter</strong> (kompozicija) — postoji i razredni, koji istovremeno nasljeđuje <code>Adaptee</code>, ali u C#-u bez višestrukog nasljeđivanja se rijetko koristi.</figcaption>
+      </figure>
+
+      <figure>
         <svg viewBox="0 0 680 170" role="img" aria-label="RoundHole radi sa sučeljem IRound; SquarePegAdapter implementira IRound i preračunava širinu kvadratnog klina u polumjer.">
           <defs><marker id="ad-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
           <marker id="ad-tri" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse"><path d="M0,0 L12,6 L0,12 z" fill="none" stroke="currentColor" stroke-width="1.4"/></marker></defs>
@@ -3199,6 +3349,39 @@ foreach (IRound peg in pegs)
     <div class="card">
       <h3>Most <span class="count">AKA Handle / Body</span></h3>
       <p class="lead">Razdvaja <strong>apstrakciju</strong> od <strong>implementacije</strong> da se mogu mijenjati neovisno. Lijek za kombinatornu eksploziju podklasa.</p>
+
+      <figure>
+        <svg class="uml" viewBox="0 0 700 252" role="img" aria-label="Struktura obrasca Most: apstrakcija agregira sučelje implementora; obje strane imaju vlastitu hijerarhiju koja se širi neovisno.">
+          <rect class="box" x="30" y="26" width="240" height="76" rx="2"/>
+          <text class="t" x="150" y="44" text-anchor="middle">Abstraction</text>
+          <line class="div" x1="30" y1="52" x2="270" y2="52"/>
+          <text class="m" x="42" y="68"># implementor: Implementor</text>
+          <text class="m" x="42" y="82">+ Operation()</text>
+
+          <line class="rel gen" x1="150" y1="168" x2="150" y2="104"/>
+          <rect class="box" x="30" y="170" width="240" height="44" rx="2"/>
+          <text class="t" x="150" y="192" text-anchor="middle">RefinedAbstraction</text>
+          <text class="s" x="150" y="232" text-anchor="middle">APSTRAKCIJA — što se radi</text>
+
+          <line class="rel aggr" x1="274" y1="60" x2="418" y2="60"/>
+          <text class="s" x="348" y="52" text-anchor="middle">implementor</text>
+
+          <rect class="iface" x="422" y="26" width="250" height="76" rx="2"/>
+          <text class="s" x="547" y="44" text-anchor="middle">«interface»</text>
+          <text class="t" x="547" y="60" text-anchor="middle">Implementor</text>
+          <line class="div" x1="422" y1="68" x2="672" y2="68"/>
+          <text class="m" x="434" y="84">+ OperationImpl()</text>
+
+          <line class="rel real" x1="470" y1="168" x2="520" y2="104"/>
+          <line class="rel real" x1="622" y1="168" x2="574" y2="104"/>
+          <rect class="box" x="400" y="170" width="140" height="44" rx="2"/>
+          <text class="t" x="470" y="192" text-anchor="middle">ConcreteImplA</text>
+          <rect class="box" x="552" y="170" width="140" height="44" rx="2"/>
+          <text class="t" x="622" y="192" text-anchor="middle">ConcreteImplB</text>
+          <text class="s" x="547" y="232" text-anchor="middle">IMPLEMENTACIJA — kako se radi</text>
+        </svg>
+        <figcaption>„Most“ je <strong>agregacija u sredini</strong>: jedina veza između dviju hijerarhija. Bez njega bi svaka kombinacija tražila vlastitu klasu (2 apstrakcije × 3 implementacije = 6 klasa); s njim se strane šire neovisno (2 + 3 = 5, pa 2 + 4 = 6…). Strukturno je gotovo identičan Strategiji — razlikuje ih to što se Most <em>projektira unaprijed</em> kao osnovna podjela sustava, dok Strategija zamjenjuje jedan algoritam.</figcaption>
+      </figure>
 
       <figure>
         <svg viewBox="0 0 680 220" role="img" aria-label="Bez mosta broj klasa je umnožak vrsta poruka i načina slanja; s mostom su dvije neovisne hijerarhije povezane referencom.">
@@ -3292,6 +3475,41 @@ foreach (IMessageSender sender in senders) {
     <div class="card">
       <h3>Kompozit <span class="count">Composite</span></h3>
       <p class="lead">Objekti se slažu u <strong>stablo</strong>, a klijent se prema grani i prema listu odnosi <em>jednako</em>.</p>
+
+      <figure>
+        <svg class="uml" viewBox="0 0 700 282" role="img" aria-label="Struktura obrasca Kompozit: zajedničko sučelje komponente, list bez djece i kompozit koji agregira komponente istog sučelja.">
+          <rect class="box" x="20" y="48" width="110" height="44" rx="2"/>
+          <text class="t" x="75" y="68" text-anchor="middle">Client</text>
+          <text class="s" x="75" y="84" text-anchor="middle">KLIJENT</text>
+          <line class="rel dep" x1="132" y1="70" x2="196" y2="70"/>
+
+          <rect class="iface" x="200" y="24" width="250" height="118" rx="2"/>
+          <text class="s" x="325" y="42" text-anchor="middle">«interface»</text>
+          <text class="t" x="325" y="58" text-anchor="middle">Component</text>
+          <line class="div" x1="200" y1="66" x2="450" y2="66"/>
+          <text class="m" x="212" y="82">+ Operation()</text>
+          <text class="m" x="212" y="96">+ Add(c: Component)</text>
+          <text class="m" x="212" y="110">+ Remove(c: Component)</text>
+          <text class="m" x="212" y="124">+ GetChild(i): Component</text>
+
+          <line class="rel real" x1="215" y1="198" x2="280" y2="144"/>
+          <line class="rel real" x1="450" y1="188" x2="380" y2="144"/>
+
+          <rect class="box" x="140" y="200" width="150" height="44" rx="2"/>
+          <text class="t" x="215" y="220" text-anchor="middle">Leaf</text>
+          <text class="s" x="215" y="236" text-anchor="middle">LIST — nema djecu</text>
+
+          <rect class="box" x="330" y="190" width="240" height="76" rx="2"/>
+          <text class="t" x="450" y="208" text-anchor="middle">Composite</text>
+          <line class="div" x1="330" y1="216" x2="570" y2="216"/>
+          <text class="m" x="342" y="232">- children: Component[ ]</text>
+          <text class="m" x="342" y="246">+ Operation()</text>
+
+          <path class="rel aggr" d="M 572,214 H 620 V 84 H 454"/>
+          <text class="s" x="560" y="78" text-anchor="middle">children *</text>
+        </svg>
+        <figcaption>Cijeli obrazac je u <strong>petlji</strong>: <code>Composite</code> drži listu <code>Component</code>, a i sam je <code>Component</code> — zato u nju može stati i drugi kompozit. <code>Composite.Operation()</code> je poziv <code>Operation()</code> na svakom djetetu, pa rekurzija ide sama. Ovdje je nacrtana <em>prozirna</em> inačica (<code>Add</code>/<code>Remove</code> u sučelju: jednak tretman, ali list nasljeđuje besmislene operacije); <em>sigurna</em> inačica ih drži samo u kompozitu.</figcaption>
+      </figure>
 
       <figure>
         <svg viewBox="0 0 680 200" role="img" aria-label="IQuestMember je zajedničko sučelje; Player je list, Party je kompozit koji sadrži druge članove uključujući druge Party objekte.">
@@ -3424,6 +3642,40 @@ class Player : IQuestMember {
     <div class="card">
       <h3>Dekorater <span class="count">AKA Wrapper</span></h3>
       <p class="lead">Dinamički dodaje ponašanje pojedinom <em>objektu</em> omotavanjem — nasljeđivanje ne pomaže jer se odnosi na cijelu klasu.</p>
+
+      <figure>
+        <svg class="uml" viewBox="0 0 700 320" role="img" aria-label="Struktura obrasca Dekorater: zajedničko sučelje komponente; konkretna komponenta i dekorater su mu ravnopravni, a dekorater uz to drži referencu na komponentu.">
+          <rect class="iface" x="230" y="24" width="240" height="74" rx="2"/>
+          <text class="s" x="350" y="42" text-anchor="middle">«interface»</text>
+          <text class="t" x="350" y="58" text-anchor="middle">Component</text>
+          <line class="div" x1="230" y1="66" x2="470" y2="66"/>
+          <text class="m" x="242" y="82">+ Operation()</text>
+
+          <line class="rel real" x1="150" y1="148" x2="290" y2="100"/>
+          <line class="rel real" x1="470" y1="148" x2="400" y2="100"/>
+
+          <rect class="box" x="40" y="150" width="220" height="44" rx="2"/>
+          <text class="t" x="150" y="170" text-anchor="middle">ConcreteComponent</text>
+          <text class="s" x="150" y="186" text-anchor="middle">pravi posao</text>
+
+          <rect class="box" x="330" y="150" width="280" height="68" rx="2"/>
+          <text class="t" x="470" y="168" text-anchor="middle">Decorator</text>
+          <line class="div" x1="330" y1="176" x2="610" y2="176"/>
+          <text class="m" x="342" y="192">- component: Component</text>
+          <text class="m" x="342" y="206">+ Operation()</text>
+
+          <path class="rel aggr" d="M 612,172 H 648 V 58 H 474"/>
+          <text class="s" x="560" y="52" text-anchor="middle">component</text>
+
+          <line class="rel gen" x1="395" y1="258" x2="430" y2="220"/>
+          <line class="rel gen" x1="543" y1="258" x2="500" y2="220"/>
+          <rect class="box" x="330" y="260" width="130" height="40" rx="2"/>
+          <text class="t" x="395" y="284" text-anchor="middle">ConcreteDecorA</text>
+          <rect class="box" x="478" y="260" width="130" height="40" rx="2"/>
+          <text class="t" x="543" y="284" text-anchor="middle">ConcreteDecorB</text>
+        </svg>
+        <figcaption>Dekorater je <strong>istovremeno</strong> <code>Component</code> (pa ga klijent ne razlikuje od omotanog objekta) <strong>i</strong> drži <code>Component</code> (pa može biti omotan i drugi dekorater). Ta dvostruka veza je jedina razlika prema Adapteru i Proxyju u dijagramu — bez nje bi lanac <code>new A(new B(new Real()))</code> bio nemoguć. Nasljeđivanje bi ovdje značilo klasu po kombinaciji svojstava.</figcaption>
+      </figure>
 
       <figure>
         <svg viewBox="0 0 680 150" role="img" aria-label="ConsoleMessage je omotana u ColoredConsoleMessage pa u EntitledConsoleMessage; svaki sloj implementira isto sučelje IMessage.">
@@ -3689,6 +3941,42 @@ public void PlantTree(int x, int y, String name, ...) {
       <p class="lead">Nadomjestak koji <strong>kontrolira pristup</strong> drugom objektu — isto sučelje, ali odlučuje kada i da li proslijediti.</p>
 
       <figure>
+        <svg class="uml" viewBox="0 0 700 278" role="img" aria-label="Struktura obrasca Proxy: proxy i stvarni subjekt ostvaruju isto sučelje, a proxy uz to drži referencu na stvarni subjekt i odlučuje kada mu proslijediti poziv.">
+          <rect class="box" x="20" y="48" width="110" height="44" rx="2"/>
+          <text class="t" x="75" y="68" text-anchor="middle">Client</text>
+          <text class="s" x="75" y="84" text-anchor="middle">KLIJENT</text>
+          <line class="rel dep" x1="132" y1="70" x2="196" y2="70"/>
+
+          <rect class="iface" x="200" y="26" width="210" height="76" rx="2"/>
+          <text class="s" x="305" y="44" text-anchor="middle">«interface»</text>
+          <text class="t" x="305" y="60" text-anchor="middle">Subject</text>
+          <line class="div" x1="200" y1="68" x2="410" y2="68"/>
+          <text class="m" x="212" y="84">+ Request()</text>
+          <text class="s" x="305" y="122" text-anchor="middle">klijent ne zna s kim razgovara</text>
+
+          <line class="rel real" x1="190" y1="168" x2="262" y2="104"/>
+          <line class="rel real" x1="455" y1="168" x2="348" y2="104"/>
+
+          <rect class="box" x="90" y="170" width="200" height="60" rx="2"/>
+          <text class="t" x="190" y="190" text-anchor="middle">RealSubject</text>
+          <line class="div" x1="90" y1="198" x2="290" y2="198"/>
+          <text class="m" x="102" y="214">+ Request()</text>
+          <text class="s" x="190" y="252" text-anchor="middle">STVARNI SUBJEKT</text>
+
+          <rect class="box" x="330" y="170" width="250" height="74" rx="2"/>
+          <text class="t" x="455" y="190" text-anchor="middle">Proxy</text>
+          <line class="div" x1="330" y1="198" x2="580" y2="198"/>
+          <text class="m" x="342" y="214">- realSubject: RealSubject</text>
+          <text class="m" x="342" y="228">+ Request()</text>
+          <text class="s" x="455" y="266" text-anchor="middle">provjeri → tek onda proslijedi</text>
+
+          <line class="rel assoc" x1="328" y1="186" x2="294" y2="186"/>
+          <text class="s" x="311" y="160" text-anchor="middle">realSubject</text>
+        </svg>
+        <figcaption>Proxy i stvarni subjekt nude <strong>isto</strong> sučelje — po tome se razlikuje od Adaptera, koji sučelje mijenja. Za razliku od Dekoratera, proxy ne <em>dodaje</em> ponašanje nego <em>kontrolira</em> hoće li se izvorno uopće izvršiti: virtualni proxy stvara skupi objekt tek pri prvom pozivu, zaštitni provjerava prava, udaljeni skriva mrežu.</figcaption>
+      </figure>
+
+      <figure>
         <svg viewBox="0 0 680 130" role="img" aria-label="Klijent zove IImage; ImageProxy prima poziv i tek pri prvom ShowImage stvara HighResolutionImage.">
           <defs><marker id="px-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
           <rect x="20" y="42" width="104" height="38" fill="none" stroke="currentColor" stroke-width="1.2" rx="3"/>
@@ -3826,6 +4114,35 @@ proxyCat.ShowImage();                            <span class="cm">// posao ovdje
       <p class="lead">Obitelj algoritama, svaki u svojoj klasi, zamjenjivi u izvođenju.</p>
 
       <figure>
+        <svg class="uml" viewBox="0 0 700 250" role="img" aria-label="Struktura obrasca Strategija: kontekst agregira sučelje strategije, a konkretne strategije ga ostvaruju i međusobno su zamjenjive.">
+          <rect class="box" x="30" y="30" width="240" height="76" rx="2"/>
+          <text class="t" x="150" y="48" text-anchor="middle">Context</text>
+          <line class="div" x1="30" y1="56" x2="270" y2="56"/>
+          <text class="m" x="42" y="72">- strategy: Strategy</text>
+          <text class="m" x="42" y="86">+ ContextInterface()</text>
+          <text class="s" x="150" y="128" text-anchor="middle">KONTEKST — ne zna koji algoritam</text>
+
+          <line class="rel aggr" x1="274" y1="64" x2="418" y2="64"/>
+          <text class="s" x="348" y="56" text-anchor="middle">strategy</text>
+
+          <rect class="iface" x="422" y="30" width="250" height="76" rx="2"/>
+          <text class="s" x="547" y="48" text-anchor="middle">«interface»</text>
+          <text class="t" x="547" y="64" text-anchor="middle">Strategy</text>
+          <line class="div" x1="422" y1="72" x2="672" y2="72"/>
+          <text class="m" x="434" y="88">+ AlgorithmInterface()</text>
+
+          <line class="rel real" x1="462" y1="168" x2="510" y2="108"/>
+          <line class="rel real" x1="599" y1="168" x2="570" y2="108"/>
+          <rect class="box" x="400" y="170" width="125" height="40" rx="2"/>
+          <text class="t" x="462" y="194" text-anchor="middle">ConcrStrategyA</text>
+          <rect class="box" x="537" y="170" width="125" height="40" rx="2"/>
+          <text class="t" x="599" y="194" text-anchor="middle">ConcrStrategyB</text>
+          <text class="s" x="547" y="234" text-anchor="middle">novi algoritam = nova klasa, kontekst se ne dira</text>
+        </svg>
+        <figcaption>Kontekst drži <strong>sučelje</strong>, ne konkretan algoritam — u tome je i OCP (novi algoritam ne mijenja kontekst) i DIP (obje strane ovise o apstrakciji). Ako je polje zamjenjivo svojstvom (<code>Strategy { get; set; }</code>), algoritam se mijenja u izvođenju jednim pridruživanjem. Strukturno isto kao Most; razlikuje ih namjera — Strategija bira <em>algoritam</em>, Most razdvaja <em>dimenzije sustava</em>.</figcaption>
+      </figure>
+
+      <figure>
         <svg viewBox="0 0 660 160" role="img" aria-label="ProgrammingClass drži referencu na ISortStrategy; AscendingSort i DescendingSort su konkretne strategije.">
           <defs><marker id="st-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
           <marker id="st-tri" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse"><path d="M0,0 L12,6 L0,12 z" fill="none" stroke="currentColor" stroke-width="1.4"/></marker></defs>
@@ -3908,6 +4225,46 @@ rppoon.Sort();</code></pre></div>
     <div class="card">
       <h3>Promatrač <span class="count">AKA Publish–Subscribe · Dependents</span></h3>
       <p class="lead">Odnos <strong>jedan naprema više</strong>: kad se stanje subjekta promijeni, svi ovisnici bivaju automatski obaviješteni.</p>
+
+      <figure>
+        <svg class="uml" viewBox="0 0 700 302" role="img" aria-label="Struktura obrasca Promatrač: subjekt agregira listu promatrača i obavještava ih, a konkretni promatrač drži povratnu referencu na konkretni subjekt da bi pročitao novo stanje.">
+          <rect class="iface" x="30" y="26" width="250" height="104" rx="2"/>
+          <text class="s" x="155" y="44" text-anchor="middle">«interface»</text>
+          <text class="t" x="155" y="60" text-anchor="middle">Subject</text>
+          <line class="div" x1="30" y1="68" x2="280" y2="68"/>
+          <text class="m" x="42" y="84">+ Attach(o: Observer)</text>
+          <text class="m" x="42" y="98">+ Detach(o: Observer)</text>
+          <text class="m" x="42" y="112">+ Notify()</text>
+
+          <line class="rel real" x1="155" y1="194" x2="155" y2="132"/>
+          <rect class="box" x="30" y="196" width="250" height="76" rx="2"/>
+          <text class="t" x="155" y="214" text-anchor="middle">ConcreteSubject</text>
+          <line class="div" x1="30" y1="222" x2="280" y2="222"/>
+          <text class="m" x="42" y="238">- subjectState</text>
+          <text class="m" x="42" y="252">+ GetState() / SetState()</text>
+          <text class="s" x="155" y="292" text-anchor="middle">SetState() završava s Notify()</text>
+
+          <rect class="iface" x="420" y="26" width="250" height="76" rx="2"/>
+          <text class="s" x="545" y="44" text-anchor="middle">«interface»</text>
+          <text class="t" x="545" y="60" text-anchor="middle">Observer</text>
+          <line class="div" x1="420" y1="68" x2="670" y2="68"/>
+          <text class="m" x="432" y="84">+ Update()</text>
+
+          <line class="rel real" x1="545" y1="194" x2="545" y2="104"/>
+          <rect class="box" x="420" y="196" width="250" height="76" rx="2"/>
+          <text class="t" x="545" y="214" text-anchor="middle">ConcreteObserver</text>
+          <line class="div" x1="420" y1="222" x2="670" y2="222"/>
+          <text class="m" x="432" y="238">- observerState</text>
+          <text class="m" x="432" y="252">+ Update()</text>
+          <text class="s" x="545" y="292" text-anchor="middle">Update() dohvati novo stanje</text>
+
+          <line class="rel aggr" x1="292" y1="60" x2="416" y2="60"/>
+          <text class="s" x="354" y="52" text-anchor="middle">observers *</text>
+          <line class="rel assoc" x1="418" y1="240" x2="284" y2="240"/>
+          <text class="s" x="351" y="232" text-anchor="middle">subject</text>
+        </svg>
+        <figcaption>Dvije strelice između stupaca su cijeli obrazac. Gornja, <strong>agregacija</strong>, je lista pretplatnika — <code>Attach</code> i <code>Detach</code> je mijenjaju u izvođenju, i to je odgovor na „mora se moći započeti i prestati dinamički“. Donja je povratna referenca kojom promatrač u <code>Update()</code> pročita novo stanje. Subjekt poznaje promatrače <em>samo</em> kroz sučelje, pa se novi tip promatrača dodaje bez izmjene subjekta.</figcaption>
+      </figure>
 
       <figure>
         <svg viewBox="0 0 680 190" role="img" aria-label="CryptoCoin drži listu promatrača i pri promjeni cijene zove Update na svakom; investitori se dinamički prijavljuju i odjavljuju.">
@@ -4049,6 +4406,35 @@ class <span class="hl">BackupComponent</span> : IEnergyObserver {      <span cla
     <div class="card">
       <h3>Lanac odgovornosti <span class="count">Chain of Responsibility</span></h3>
       <p class="lead">Zahtjev putuje nizom obrađivača dok ga netko ne obradi — pošiljatelj ne zna tko će to biti.</p>
+
+      <figure>
+        <svg class="uml" viewBox="0 0 700 272" role="img" aria-label="Struktura obrasca Lanac odgovornosti: apstraktni obrađivač drži referencu na sljedećeg obrađivača istog tipa, a konkretni obrađivači ga nasljeđuju.">
+          <rect class="box" x="20" y="52" width="110" height="44" rx="2"/>
+          <text class="t" x="75" y="72" text-anchor="middle">Client</text>
+          <text class="s" x="75" y="88" text-anchor="middle">KLIJENT</text>
+          <line class="rel dep" x1="132" y1="74" x2="206" y2="74"/>
+
+          <rect class="box" x="210" y="24" width="270" height="104" rx="2"/>
+          <text class="t" x="345" y="42" text-anchor="middle">Handler</text>
+          <text class="s" x="345" y="56" text-anchor="middle">«abstract»</text>
+          <line class="div" x1="210" y1="64" x2="480" y2="64"/>
+          <text class="m" x="222" y="80"># successor: Handler</text>
+          <text class="m" x="222" y="94">+ SetSuccessor(h: Handler)</text>
+          <text class="m" x="222" y="108">+ HandleRequest()</text>
+
+          <path class="rel aggr" d="M 482,50 H 540 V 110 H 484"/>
+          <text class="s" x="548" y="84">successor</text>
+
+          <line class="rel gen" x1="270" y1="188" x2="310" y2="130"/>
+          <line class="rel gen" x1="450" y1="188" x2="390" y2="130"/>
+          <rect class="box" x="190" y="190" width="160" height="44" rx="2"/>
+          <text class="t" x="270" y="214" text-anchor="middle">ConcreteHandler1</text>
+          <rect class="box" x="370" y="190" width="160" height="44" rx="2"/>
+          <text class="t" x="450" y="214" text-anchor="middle">ConcreteHandler2</text>
+          <text class="s" x="345" y="256" text-anchor="middle">svaka karika zna samo svoje pravilo</text>
+        </svg>
+        <figcaption>Prepoznaje se po <strong>petlji na samom sebi</strong>: <code>Handler</code> drži <code>successor</code> tipa <code>Handler</code>, nikad tipa konkretnog obrađivača — zato se lanac može presložiti bez izmjene ijednog razreda. Klijent zna samo prvu kariku. Kod <em>čistog</em> lanca obrada staje kod prvog nadležnog; kod <em>nečistog</em> svaka karika odradi svoje pa svejedno proslijedi — oba primjera s ispita su nečista.</figcaption>
+      </figure>
 
       <figure>
         <svg viewBox="0 0 680 130" role="img" aria-label="Zahtjev za isplatom prolazi kroz obrađivače za 100, 10 i 5 kuna, a na kraju lanca stoji EndOfChainHandler.">
@@ -5697,6 +6083,352 @@ class BackupComponent  : IEnergyObserver { ... }
       </div>
     </details>
 
+    <div class="sec-head" style="margin-top:56px">
+      <p class="eyebrow">banka pitanja · 8 primjera ispita</p>
+      <h2>Sve inačice koje su se pojavile</h2>
+      <p class="lead">Ispit je <strong>predvidljiv</strong>. Kostur je uvijek isti — deset pitanja po tri boda, uvijek istim redom i uvijek o istoj temi. Mijenja se samo <em>koji</em> obrazac, <em>koji</em> miris, <em>koje</em> načelo. Ispod je svaki slot i sve što je u njemu do sada bilo.</p>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Tema slota</th><th>Inačice koje su se pojavile</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1</strong></td><td>imenovanje u izlistanju</td><td>košarica/težina (3×), obavijesti, slike, bilješke, Singleton generator</td></tr>
+          <tr><td><strong>2</strong></td><td>refaktoriranje</td><td>normalizacija, binomni koeficijent, prosjek, savršeni brojevi, jedinstveni znakovi, highly composite, distinct</td></tr>
+          <tr><td><strong>3</strong></td><td>SOLID načelo + pseudokôd</td><td>open-closed (4×), dependency inversion (3×)</td></tr>
+          <tr><td><strong>4</strong></td><td>miris u kôdu</td><td>privremeni atributi (4×), nakupine podataka (2×), divergentne promjene</td></tr>
+          <tr><td><strong>5</strong></td><td>anti-obrazac <em>ili</em> načelo unutar obrasca</td><td>realni tipovi za novac, funkcijska dekompozicija, magični brojevi · SRP u Singletonu, SRP u Lancu, OCP u Strategiji, DIP u Strategiji</td></tr>
+          <tr><td><strong>6</strong></td><td>tri <em>unit</em> testa u pseudokôdu</td><td>uvijek mali razred s petljom i uvjetom</td></tr>
+          <tr><td><strong>7</strong></td><td>2 prednosti + 2 nedostatka obrasca</td><td>Kompozit (2×), Dekorater, Apstraktna tvornica, Proxy, Lanac odgovornosti, Singleton</td></tr>
+          <tr><td><strong>8</strong></td><td>prepoznaj obrazac iz izlistanja</td><td>Promatrač (4×), Lanac odgovornosti (2×), Memento, Proxy</td></tr>
+          <tr><td><strong>9</strong></td><td>poveži uloge s elementima</td><td>Fasada, Proxy, Strategija, Kompozit (2×), Lanac odgovornosti, Memento</td></tr>
+          <tr><td><strong>10</strong></td><td>odaberi obrazac za opisani zadatak</td><td>Promatrač (3×), Memento, Kompozit, Adapter, Strategija</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="exam" style="margin-top:16px">
+      <p class="eyebrow">Što ovo znači za učenje</p>
+      <p>Sedam obrazaca nosi <strong>gotovo sve</strong> bodove iz pitanja 7–10: <strong>Promatrač, Kompozit, Lanac odgovornosti, Memento, Strategija, Proxy, Adapter</strong>. Ostalih šesnaest znaj prepoznati i svrstati u skupinu; ovih sedam znaj i skicirati napamet.</p>
+    </div>
+
+    <details class="q" style="margin-top:22px">
+      <summary><span class="qn">3</span> Objasnite načelo <em>open-closed</em> / <em>dependency inversion</em>. Dajte pseudokôd koji ga narušava i prepravite ga. <span class="pts">3 boda · 7 pojavljivanja</span></summary>
+      <div class="qbody">
+        <p>Jedno od dva načela, uvijek s istim zahtjevom: <strong>definicija → primjer prekršaja → objašnjenje zašto je problem → ispravak</strong>. Sva četiri dijela nose bodove, pa napiši sva četiri i kad ti se čini očito.</p>
+      </div>
+      <div class="ans">
+        <p class="eyebrow">Odgovor</p>
+        <div class="pair">
+          <div class="pane note"><div class="pane-h">open-closed — 4 pojavljivanja</div>
+<pre><code><span class="cm">// Otvoreno za PROŠIRENJE, zatvoreno za IZMJENU:</span>
+<span class="cm">// novo ponašanje se dodaje novim kôdom,</span>
+<span class="cm">// a ne prepravljanjem postojećeg.</span>
+
+<span class="cm">// ✗ narušava</span>
+class AreaCalculator {
+    public double Area(Shape shape) {
+        <span class="hl">if</span> (shape.Type == "circle")
+            return shape.R * shape.R * PI;
+        <span class="hl">else if</span> (shape.Type == "square")
+            return shape.A * shape.A;
+    }
+}
+<span class="cm">// Problem: svaki novi oblik traži izmjenu</span>
+<span class="cm">// VEĆ TESTIRANE metode → rizik regresije,</span>
+<span class="cm">// ponovno prevođenje, grananje raste bez kraja.</span>
+
+<span class="cm">// ✓ poštuje</span>
+abstract class Shape { <span class="hl">public abstract double Area();</span> }
+class Circle : Shape { public override double Area() =&gt; R*R*PI; }
+class Square : Shape { public override double Area() =&gt; A*A; }
+<span class="cm">// Novi oblik = nova klasa. Ništa se ne dira.</span></code></pre></div>
+          <div class="pane note"><div class="pane-h">dependency inversion — 3 pojavljivanja</div>
+<pre><code><span class="cm">// Moduli visoke razine ne ovise o modulima</span>
+<span class="cm">// niske razine — oba ovise o APSTRAKCIJI.</span>
+<span class="cm">// Apstrakcija ne ovisi o detalju, detalj o apstrakciji.</span>
+
+<span class="cm">// ✗ narušava</span>
+class ReportService {
+    private <span class="hl">MySqlDatabase</span> database = new <span class="hl">MySqlDatabase</span>();
+    public void Generate() { database.Query("..."); }
+}
+<span class="cm">// Problem: visoka razina (ReportService) je</span>
+<span class="cm">// zakucana za konkretan detalj. Ne može se</span>
+<span class="cm">// testirati bez baze ni zamijeniti drugom.</span>
+
+<span class="cm">// ✓ poštuje</span>
+interface <span class="hl">IDataSource</span> { Rows Query(string q); }
+
+class ReportService {
+    private <span class="hl">IDataSource</span> source;
+    public ReportService(<span class="hl">IDataSource</span> source) { this.source = source; }
+}
+<span class="cm">// Ovisnost ulazi kroz konstruktor (injekcija).</span>
+<span class="cm">// U testu se ubaci lažnjak.</span></code></pre></div>
+        </div>
+        <div class="exam">
+          <p class="eyebrow">Veza s ostatkom gradiva</p>
+          <p>Isti prekršaj se pita iz tri kuta: kao <a href="#solid">kršenje OCP-a</a>, kao <a href="#mirisi">miris „naredba switch“</a> i kao pitanje 5 „u čemu se ogleda OCP u obrascu Strategija“. Odgovor je uvijek isti pomak: <strong>grananje po tipu → polimorfizam</strong>.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="q">
+      <summary><span class="qn">4</span> Na što se odnosi miris <em>X</em> i kojim ga postupcima refaktorirate? <span class="pts">3 boda · 7 pojavljivanja</span></summary>
+      <div class="qbody">
+        <p>Tri mirisa su se pojavila. Traži se <strong>definicija + nekoliko postupaka</strong> — postupke navedi imenom (Izdvoji klasu, Uvedi objekt parametra…), jer to su bodovi.</p>
+      </div>
+      <div class="ans">
+        <p class="eyebrow">Odgovor</p>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Miris</th><th>Na što se odnosi</th><th>Postupci refaktoriranja</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Privremeni atributi</strong><br><span class="chip">4×</span></td>
+                <td>Atribut klase koji je popunjen samo <em>ponekad</em> — za jedan slučaj upotrebe ili jedan algoritam. Ostatak vremena je <code>null</code> ili besmislen, pa ga svaka metoda mora provjeravati. Čitatelj ne može znati kada objekt ima „puno“ stanje.</td>
+                <td><strong>Izdvoji klasu</strong> — atributi i metode koje ih koriste sele u svoju klasu, gdje su uvijek postavljeni · <strong>Uvedi Null objekt</strong> umjesto provjera <code>if (x != null)</code> · <strong>Premjesti metodu</strong> zajedno s atributima · ako služe samo kao međurezultat algoritma: <strong>Zamijeni metodu objektom metode</strong>, ili ih pretvori u lokalne varijable/parametre</td>
+              </tr>
+              <tr>
+                <td><strong>Nakupine podataka</strong><br><span class="chip">2×</span></td>
+                <td>Iste dvije-tri varijable se stalno pojavljuju zajedno — kao polja više klasa i kao parametri više potpisa (<code>street, city, zip</code>). Test: <em>izbaci jedno polje — gube li ostala smisao?</em> Ako da, pripadaju zajedno i nedostaje im ime.</td>
+                <td><strong>Izdvoji klasu</strong> za polja koja putuju zajedno · <strong>Uvedi objekt parametra</strong> za skupine u potpisima · <strong>Sačuvaj cijeli objekt</strong> — umjesto raspakiranja objekta u tri argumenta, proslijedi objekt</td>
+              </tr>
+              <tr>
+                <td><strong>Divergentne promjene</strong><br><span class="chip">1×</span></td>
+                <td>Jedna klasa se mijenja iz <em>više različitih razloga</em>: „kad se mijenja baza, diram ovu klasu; kad se mijenja format izvještaja, opet ovu klasu.“ To je izravno kršenje SRP-a.</td>
+                <td><strong>Izdvoji klasu</strong> po osi promjene — jedan razlog izmjene po klasi · <strong>Izdvoji nadklasu / podklasu</strong> · <strong>Premjesti metodu / polje</strong><br>Suprotan miris je <em>puškaranje</em> (shotgun surgery): jedna promjena tjera izmjenu u mnogo klasa.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+
+    <details class="q">
+      <summary><span class="qn">5a</span> Na što se odnosi i što odlikuje anti-obrazac <em>X</em>? <span class="pts">3 boda · 3 pojavljivanja</span></summary>
+      <div class="ans">
+        <p class="eyebrow">Odgovor</p>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Anti-obrazac</th><th>Na što se odnosi</th><th>Zašto je problem / kako se izlazi</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Realni tipovi za novac</strong></td>
+                <td>Novčani iznos se drži u <code>float</code> / <code>double</code>. Binarni pomični zarez ne može točno prikazati <code>0.1</code>, pa se pogreška gomila kroz zbrajanja i množenja.</td>
+                <td>Iznosi prestaju biti točni (<code>0.1 + 0.2 != 0.3</code>), usporedba na jednakost je nepouzdana, zaokruživanje se ponaša neočekivano — u financijama neprihvatljivo. Rješenje: <code>decimal</code>, ili cjelobrojan zapis u najmanjoj jedinici (lipe/centi), ili <strong>vlastiti tip <code>Money</code></strong> koji nosi i iznos i valutu i sam kontrolira zaokruživanje.</td>
+              </tr>
+              <tr>
+                <td><strong>Funkcijska dekompozicija</strong></td>
+                <td>Proceduralni kôd napisan u objektnom jeziku: klase koje su zapravo funkcije (<code>CalculateTotal</code>, <code>PrintReport</code>), s jednom metodom i bez stanja, uz zasebne „klase“ koje su samo vreće podataka.</td>
+                <td>Nema enkapsulacije — podaci i ponašanje su razdvojeni, pa se nasljeđivanje i polimorfizam ne mogu iskoristiti. Koraci: prepoznaj koji podaci i koje funkcije <em>idu zajedno</em>, spoji ih u pravu klasu (Izdvoji klasu / Premjesti metodu), pa grananje po tipu zamijeni polimorfizmom.</td>
+              </tr>
+              <tr>
+                <td><strong>Magični brojevi</strong></td>
+                <td>Doslovna vrijednost u kôdu bez imena: <code>if (age &gt; 65)</code>, <code>salary * 0.25</code>, <code>arr[7]</code>.</td>
+                <td>Ne zna se <em>što</em> broj znači ni <em>smije li</em> se mijenjati; isti broj na pet mjesta znači pet mjesta za pogrešku pri izmjeni; pretraga po vrijednosti hvata i nepovezana mjesta. Rješenje: imenovana konstanta (<code>const int RetirementAge = 65;</code>), enumeracija, ili konfiguracija ako vrijednost stvarno varira.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+
+    <details class="q">
+      <summary><span class="qn">5b</span> U čemu se ogleda načelo <em>X</em> u sklopu obrasca <em>Y</em>? <span class="pts">3 boda · 4 pojavljivanja</span></summary>
+      <div class="qbody">
+        <p>Ovo je najuže pitanje na ispitu i najlakše ga je promašiti: ne traži se opis obrasca ni opis načela, nego <strong>točka gdje se dodiruju</strong>. Odgovor stane u tri rečenice.</p>
+      </div>
+      <div class="ans">
+        <p class="eyebrow">Odgovor</p>
+        <div class="grid">
+          <div class="card" style="margin-top:0">
+            <h4>SRP u <span class="tag">Singletonu</span></h4>
+            <p>Trik-pitanje: Singleton SRP <strong>krši</strong>, i to je poanta. Klasa uz svoj stvarni posao preuzima i drugu odgovornost — <em>upravljanje vlastitim životnim ciklusom</em> (privatni konstruktor, statičko polje, kontrola broja instanci). Zato ima dva razloga za izmjenu i zato ga se navodi i kao anti-obrazac. Ispravnije: odgovornost stvaranja seli u tvornicu ili spremnik ovisnosti, a sama klasa ostaje obična.</p>
+          </div>
+          <div class="card" style="margin-top:0">
+            <h4>SRP u <span class="tag">Lancu odgovornosti</span></h4>
+            <p>Svaki obrađivač zna <em>jedno</em>: je li ovaj zahtjev njegov i što s njim učiniti. Ne zna tko je iza njega, ni koliko ih ima, ni što se događa ako ga nitko ne obradi. Odgovornost <em>prosljeđivanja</em> i <em>redoslijeda</em> izdvojena je u baznu kariku i u klijenta koji lanac slaže. Zato svaki razred ima točno jedan razlog za izmjenu — promjenu vlastitog pravila.</p>
+          </div>
+          <div class="card" style="margin-top:0">
+            <h4>OCP u <span class="tag">Strategiji</span></h4>
+            <p>Novo ponašanje se dodaje <em>novom klasom</em> koja ostvaruje sučelje strategije. Kontekst se pritom ne dira — on i dalje zove istu metodu istog sučelja. Otvoreno za proširenje (nova strategija), zatvoreno za izmjenu (kontekst i postojeće strategije ostaju netaknute). Isti zadatak bez obrasca bio bi <code>switch</code> koji raste sa svakim novim algoritmom.</p>
+          </div>
+          <div class="card" style="margin-top:0">
+            <h4>DIP u <span class="tag">Strategiji</span></h4>
+            <p>Kontekst je modul visoke razine, konkretni algoritmi su niska razina. Kontekst ne ovisi ni o jednom od njih — drži polje tipa <code>IStrategy</code>, a ne <code>QuickSort</code>. Oboje ovise o apstrakciji, i to je doslovno „inverzija“: bez obrasca bi strelica ovisnosti išla od konteksta prema konkretnom algoritmu, a ovako obje idu prema sučelju.</p>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="q">
+      <summary><span class="qn">7</span> Navedite barem dvije prednosti i dva moguća nedostatka obrasca <em>X</em>. <span class="pts">3 boda · 7 pojavljivanja</span></summary>
+      <div class="qbody">
+        <p>Nedostaci nose polovicu bodova, a najčešće se ispuste. Za svaki obrazac znaj <strong>dva i dva</strong>.</p>
+      </div>
+      <div class="ans">
+        <p class="eyebrow">Odgovor</p>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Obrazac</th><th>Prednosti</th><th>Nedostaci</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Kompozit</strong><br><span class="chip">2×</span></td>
+                <td>Klijent jednako postupa s listom i sa složenim objektom — nestaju provjere tipa · Nove vrste komponenti dodaju se bez izmjene klijenta (OCP) · Prirodno modelira rekurzivne hijerarhije (stablo)</td>
+                <td>Teško je <em>ograničiti</em> što smije ući u kompozit — provjera ostaje na izvođenje · Zajedničko sučelje postaje preopćenito: list nasljeđuje <code>Add</code>/<code>Remove</code> koje mu nemaju smisla (sigurna vs. prozirna inačica)</td>
+              </tr>
+              <tr>
+                <td><strong>Dekorater</strong></td>
+                <td>Odgovornost se dodaje <em>u izvođenju</em>, po objektu, bez nasljeđivanja · Dekorateri se slažu u lanac i slobodno kombiniraju · Izbjegava eksploziju podklasa za svaku kombinaciju svojstava</td>
+                <td>Nastaje mnogo malih objekata sličnog izgleda — otklanjanje grešaka je teško jer se stog poziva puni omotačima · Dekorirani objekt <em>nije</em> isti objekt: usporedba referenci i provjera konkretnog tipa ne rade · Redoslijed dekoratera mijenja rezultat, a nigdje nije zapisan</td>
+              </tr>
+              <tr>
+                <td><strong>Apstraktna tvornica</strong></td>
+                <td>Klijent je potpuno odvojen od konkretnih klasa proizvoda · Jamči da proizvodi iz <em>iste obitelji</em> idu zajedno (ne može se pomiješati Windows gumb s macOS okvirom) · Zamjena cijele obitelji je zamjena jednog objekta tvornice</td>
+                <td>Dodavanje <em>nove vrste</em> proizvoda mijenja sučelje tvornice i <em>sve</em> konkretne tvornice — u toj osi krši OCP · Znatno više klasa i posredovanja nego što problem često traži</td>
+              </tr>
+              <tr>
+                <td><strong>Proxy</strong></td>
+                <td>Kontrolira pristup stvarnom subjektu — zaštita, lijeno stvaranje, predmemorija, udaljeni pristup, bilježenje · Ni subjekt ni klijent se ne mijenjaju: proxy dijeli sučelje sa subjektom · Skupi objekt nastaje tek kad zatreba</td>
+                <td>Dodatni sloj usporava svaki poziv i otežava praćenje tijeka · Lijeno stvaranje unosi nepredvidivo kašnjenje pri prvom pristupu · Više klasa; ako se sučelje subjekta promijeni, mijenja se i proxy</td>
+              </tr>
+              <tr>
+                <td><strong>Lanac odgovornosti</strong></td>
+                <td>Pošiljatelj ne zna tko će obraditi zahtjev — smanjena vezanost · Lanac se slaže i preslaguje u izvođenju · Svaki obrađivač ima jednu odgovornost i dodaje se bez izmjene ostalih</td>
+                <td>Nema jamstva da će zahtjev itko obraditi — može ispasti na kraju lanca nezapažen · Tijek je raspršen po više objekata, pa je otklanjanje grešaka teže · Dug lanac znači nepotrebne prolaze</td>
+              </tr>
+              <tr>
+                <td><strong>Singleton</strong></td>
+                <td>Kontroliran pristup jedinoj instanci — bolje od globalne varijable jer klasa sama čuva invarijantu · Lijeno stvaranje: instanca nastaje tek pri prvom pristupu · Lako se proširi na kontroliran broj instanci (npr. točno tri)</td>
+                <td>Globalno stanje i <em>skrivene</em> ovisnosti — iz potpisa se ne vidi da klasa ovisi o njemu · Otežava testiranje: ne može se zamijeniti lažnjakom, a stanje curi iz testa u test · Krši SRP · Bez zaključavanja pada pri višedretvenom pristupu</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+
+    <details class="q">
+      <summary><span class="qn">8</span> Prepoznaj obrazac iz izlistanja — po čemu se vidi. <span class="pts">3 boda · 8 pojavljivanja</span></summary>
+      <div class="qbody">
+        <p>Uvijek se traži troje: <strong>koji obrazac</strong>, <strong>koja skupina</strong>, <strong>dvije prednosti u ovom konkretnom slučaju</strong>. Zadnji dio mora biti vezan uz zadano izlistanje, a ne općenit.</p>
+      </div>
+      <div class="ans">
+        <p class="eyebrow">Odgovor</p>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Obrazac</th><th>Skupina</th><th>Po čemu se prepoznaje u kôdu</th><th>Što je bilo na ispitu</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Promatrač</strong><br><span class="chip">4×</span></td>
+                <td>ponašanja</td>
+                <td><code>List&lt;IListener&gt;</code> u subjektu + trojac <code>Register</code>/<code>Unregister</code>/<code>Notify</code>, gdje <code>Notify</code> u petlji zove metodu sučelja na svakom pretplatniku</td>
+                <td><code>Gps</code> / <code>ILocationProvider</code> / <code>MapLocationListener</code></td>
+              </tr>
+              <tr>
+                <td><strong>Lanac odgovornosti</strong><br><span class="chip">2×</span></td>
+                <td>ponašanja</td>
+                <td><code>protected Handler next;</code> + <code>SetNext(...)</code>, a metoda obrade završava pozivom iste metode na <code>next</code></td>
+                <td><code>RequestFilter</code> / <code>AuthenticationFilter</code> · <code>MailProcessor</code></td>
+              </tr>
+              <tr>
+                <td><strong>Memento</strong></td>
+                <td>ponašanja</td>
+                <td>Tri razreda: onaj sa stanjem ima <code>Store()</code> i <code>Restore(x)</code>, drugi je gola snimka bez ponašanja, treći je <code>Stack</code> snimki</td>
+                <td><code>TextEditor</code> / <code>TextSnapshot</code> / <code>SnapshotStorage</code> / <code>TextWindow</code></td>
+              </tr>
+              <tr>
+                <td><strong>Proxy</strong></td>
+                <td>strukture</td>
+                <td>Razred ostvaruje isto sučelje kao stvarni subjekt <em>i</em> drži referencu na njega; u metodi je provjera prije prosljeđivanja (<code>if (real == null) real = new ...</code>)</td>
+                <td>omotač oko izvora podataka</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="exam">
+          <p class="eyebrow">Zamka</p>
+          <p>Adapter, Dekorater i Proxy izgledaju gotovo isto — svi ostvaruju sučelje i drže objekt tog tipa. Razlikuje ih <strong>namjera</strong>: Adapter <em>mijenja</em> sučelje (potpisi se ne poklapaju), Dekorater <em>dodaje</em> ponašanje istom sučelju, Proxy <em>kontrolira pristup</em> istom sučelju. Detaljna usporedba je u odjeljku <a href="#strukture">Obrasci strukture</a>.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="q">
+      <summary><span class="qn">9</span> Povežite uloge s elementima. Koji obrazac i koja skupina? <span class="pts">3 boda · 6 pojavljivanja</span></summary>
+      <div class="qbody">
+        <p>Tablica je <strong>namjerno pomiješana</strong> — redak ne znači da uloga lijevo pripada elementu desno. Šest zadataka koji su se pojavili, u izvornom obliku. Dopiši uloge, pa otvori odgovor.</p>
+        <div class="grid">
+          <div class="card" style="margin-top:0"><h4>A</h4><p><span class="tag">Fasada</span> <span class="tag">Podsustav</span> · <code>OneClickCheckout</code>, <code>Payment processing</code>, <code>Customer info handling</code>, <code>Discount handling</code></p></div>
+          <div class="card" style="margin-top:0"><h4>B</h4><p><span class="tag">Proxy</span> <span class="tag">Subjekt</span> <span class="tag">Stvarni subjekt</span> · <code>IPlaylist</code>, <code>VirtualPlaylist</code>, <code>LoggingPlaylist</code>, <code>Playlist</code></p></div>
+          <div class="card" style="margin-top:0"><h4>C</h4><p><span class="tag">Strategija</span> <span class="tag">Konkretna strategija</span> <span class="tag">Kontekst</span> · <code>SalaryProcessor</code>, <code>HourlyPayment</code>, <code>IPayment</code>, <code>ContractPayment</code></p></div>
+          <div class="card" style="margin-top:0"><h4>D</h4><p><span class="tag">Kompozit</span> <span class="tag">List</span> <span class="tag">Komponenta</span> <span class="tag">Radnja</span> · <code>IBuyable</code>, <code>T-Shirt</code>, <code>CalculatePriceWithTax</code>, <code>GiftSet</code></p></div>
+          <div class="card" style="margin-top:0"><h4>E</h4><p><span class="tag">Component</span> <span class="tag">Leaf</span> <span class="tag">Composite</span> <span class="tag">Operation</span> · <code>IToDoItem</code>, <code>Task</code>, <code>Project</code>, <code>Calculate time estimate</code></p></div>
+          <div class="card" style="margin-top:0"><h4>F</h4><p><span class="tag">Memento</span> <span class="tag">Izvornik</span> <span class="tag">Skrbnik</span> · <code>NavigationRoute</code>, <code>SavedRoute</code>, <code>RouteArchive</code></p></div>
+        </div>
+      </div>
+      <div class="ans">
+        <p class="eyebrow">Odgovor</p>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th></th><th>Obrazac · skupina</th><th>Točno pridruživanje</th></tr></thead>
+            <tbody>
+              <tr><td><strong>A</strong></td><td><strong>Fasada</strong> · strukture</td><td><code>OneClickCheckout</code> = fasada; ostala tri (plaćanje, podaci o kupcu, popusti) = podsustav</td></tr>
+              <tr><td><strong>B</strong></td><td><strong>Proxy</strong> · strukture</td><td><code>IPlaylist</code> = subjekt (sučelje); <code>Playlist</code> = stvarni subjekt; <code>VirtualPlaylist</code> i <code>LoggingPlaylist</code> = proxyji (virtualni i za bilježenje)</td></tr>
+              <tr><td><strong>C</strong></td><td><strong>Strategija</strong> · ponašanja</td><td><code>IPayment</code> = strategija; <code>HourlyPayment</code>, <code>ContractPayment</code> = konkretne strategije; <code>SalaryProcessor</code> = kontekst</td></tr>
+              <tr><td><strong>D</strong></td><td><strong>Kompozit</strong> · strukture</td><td><code>IBuyable</code> = komponenta; <code>T-Shirt</code> = list; <code>GiftSet</code> = kompozit; <code>CalculatePriceWithTax</code> = radnja</td></tr>
+              <tr><td><strong>E</strong></td><td><strong>Kompozit</strong> · strukture</td><td><code>IToDoItem</code> = komponenta; <code>Task</code> = list; <code>Project</code> = kompozit; <code>Calculate time estimate</code> = radnja</td></tr>
+              <tr><td><strong>F</strong></td><td><strong>Memento</strong> · ponašanja</td><td><code>SavedRoute</code> = memento; <code>NavigationRoute</code> = izvornik (tvorac); <code>RouteArchive</code> = skrbnik</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="exam">
+          <p class="eyebrow">Kako brzo pogoditi</p>
+          <p>Element čije ime počinje s <code>I</code> ili zvuči kao ugovor gotovo uvijek je <em>apstraktna</em> uloga (komponenta, strategija, subjekt). Element s <code>-Service</code>, <code>-Processor</code>, <code>-System</code> u imenu je obično <em>kontekst</em> ili <em>klijent</em>. Ostatak su konkretne izvedbe. Uz to, jedan zapis u stupcu je često <strong>metoda</strong>, ne razred (<code>CalculatePriceWithTax</code>, <code>Calculate time estimate</code>) — to je uloga „radnja/operacija“.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="q">
+      <summary><span class="qn">10</span> Koji je obrazac prikladan za dani zadatak? — svih osam opisa <span class="pts">3 boda · 8 pojavljivanja</span></summary>
+      <div class="qbody">
+        <p>U opisu je uvijek <strong>jedna rečenica koja odaje obrazac</strong>. Pronađi nju i ostalo je opis domene. Ispod je svih osam zadataka; pokušaj svaki prije otvaranja.</p>
+        <ol>
+          <li>Generator pseudo-slučajnih brojeva s metodama za interval [a,b], <em>dostupan unutar cijelog sustava</em>.</li>
+          <li>Nadzor proizvodnje i potrošnje energije; više raznorodnih komponenti <em>automatski obaviješteno o promjeni</em>, odnos se <em>ostvaruje i prekida dinamički</em>, nove komponente <em>bez utjecaja na klijentski kôd</em>.</li>
+          <li>Nadzor protoka plina; nadzorni elementi <em>obavještavaju sve koje promjena zanima</em>, <em>dinamičko</em> započinjanje i odustajanje, pratitelji u raznim izvedbama (mail, bilježenje, prikaz).</li>
+          <li><em>MooTube</em>: korisnici <em>prate</em> pojedinog kreatora i pri objavi dobivaju obavijest; <em>velik broj</em> pratitelja; praćenje <em>dinamičko</em>.</li>
+          <li>Didaktički alat za djecu: zaslon čuva kolekciju oblika koji <em>nisu javno dostupni</em>; treba <em>undo</em> i povratak na ranije stanje; čuva se <em>zadnjih deset</em> stanja; <em>obavezno očuvati enkapsulaciju</em>.</li>
+          <li>Alat za predškolsku djecu: konkretni oblici (kružnica, pravokutnik) i <em>složeni oblici koji se sastoje od više osnovnih ili drugih složenih</em>; klijent svima jednako traži iscrtavanje i krajnje točke.</li>
+          <li>Rezervacija smještaja: klijent koristi <code>IBookingProvider.GetAccomodation(int, int)</code>; treba uključiti vanjsku <code>AirBookService.RetrieveAll(Location)</code> koja <em>ne ugrađuje niti može ugraditi</em> to sučelje; klijentski kôd <em>ne treba biti svjestan promjene</em>.</li>
+          <li>Slanje poruka uz kriptografske <em>hash</em> funkcije; treba podržati različite inačice i <em>naknadno dodavati nove</em>; moraju biti <em>izmjenjive tijekom izvođenja bez ponovnog prevođenja</em>.</li>
+        </ol>
+      </div>
+      <div class="ans">
+        <p class="eyebrow">Odgovor</p>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Obrazac · skupina</th><th>Rečenica koja ga odaje</th><th>Ključne uloge u odgovoru</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td><strong>Singleton</strong> · stvaranja</td><td>„dostupan unutar cijelog sustava“ = jedna instanca + globalna pristupna točka</td><td>privatni konstruktor, statičko polje <code>instance</code>, <code>GetInstance()</code></td></tr>
+              <tr><td>2</td><td><strong>Promatrač</strong> · ponašanja</td><td>„automatski obaviješteno“ + „dinamički ostvariti i prekinuti“</td><td>subjekt (<code>Attach</code>/<code>Detach</code>/<code>Notify</code>), sučelje promatrača (<code>Update</code>), konkretni promatrači</td></tr>
+              <tr><td>3</td><td><strong>Promatrač</strong> · ponašanja</td><td>isto — „obavijestiti sve koje zanima“ + „dinamičko“</td><td>isto; mail/log/prikaz su konkretni promatrači</td></tr>
+              <tr><td>4</td><td><strong>Promatrač</strong> · ponašanja</td><td>„pratiti“ + „prestati pratiti po želji“ + velik broj pratitelja</td><td><code>MooTuber</code> = subjekt, korisnik = promatrač</td></tr>
+              <tr><td>5</td><td><strong>Memento</strong> · ponašanja</td><td>„undo“ + „vratiti na prethodno stanje“ + <em>„očuvati enkapsulaciju“</em></td><td>tvorac (<code>Save</code>/<code>Restore</code>), memento (snimka), skrbnik (zadnjih 10)</td></tr>
+              <tr><td>6</td><td><strong>Kompozit</strong> · strukture</td><td>„složeni oblici koji se sastoje od više osnovnih ili drugih složenih“ = rekurzija</td><td>komponenta (<code>Draw</code>, <code>Left</code>, <code>Right</code>, <code>Top</code>), list, kompozit s <code>List&lt;IShape&gt;</code></td></tr>
+              <tr><td>7</td><td><strong>Adapter</strong> · strukture</td><td>„ne ugrađuje niti može ugraditi dano sučelje“ + potpisi se ne poklapaju</td><td>cilj <code>IBookingProvider</code>, adaptirani <code>AirBookService</code>, adapter koji prevodi <code>(int,int)</code> → <code>Location</code> i <code>Space</code> → <code>Accomodation</code></td></tr>
+              <tr><td>8</td><td><strong>Strategija</strong> · ponašanja</td><td>„izmjenjive tijekom izvođenja bez ponovnog prevođenja“</td><td>sučelje <code>IHashFunction</code>, konkretne funkcije, kontekst koji drži zamjenjivo sučelje</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="exam">
+          <p class="eyebrow">Rječnik okidača</p>
+          <p><em>„dinamički pretplatiti/odjaviti“</em> → Promatrač · <em>„sastoji se od više istih ili složenijih“</em> → Kompozit · <em>„undo“ / „prethodno stanje“ / „enkapsulacija“</em> → Memento · <em>„izmjenjivo u izvođenju“ / „algoritam“</em> → Strategija · <em>„postojeća klasa s krivim sučeljem“</em> → Adapter · <em>„dostupno cijelom sustavu“ / „samo jedna“</em> → Singleton · <em>„kontrola pristupa“ / „skupo stvoriti“</em> → Proxy · <em>„proslijedi dalje ako nisi ti“</em> → Lanac odgovornosti.</p>
+        </div>
+      </div>
+    </details>
+
     <div class="card">
       <h3>Zadnja provjera prije ispita</h3>
       <div class="grid">
@@ -5738,9 +6470,9 @@ class BackupComponent  : IEnergyObserver { ... }
 </section>
 
 <footer class="wrap foot">
-  <p>Građeno iz materijala kolegija RPPOON, FERIT Osijek — predavanja PR1–PR2 (čist i nečist kôd) i PR3–PR6 (oblikovni obrasci), uz primjere iz izvornih <code>.cs</code> projekata i dva primjera pismenog ispita.</p>
+  <p>Građeno iz materijala kolegija RPPOON, FERIT Osijek — predavanja PR1–PR2 (čist i nečist kôd) i PR3–PR6 (oblikovni obrasci), uz primjere iz izvornih <code>.cs</code> projekata i osam primjera pismenog ispita.</p>
   <p>Sav kôd je iz gradiva ili izravno izveden iz njega. Primjeri „bez obrasca“ rekonstruirani su da pokažu problem koji obrazac rješava.</p>
-  <p><strong>Dijagrami:</strong> UML dijagrami klasa prerisani su sa <em>Struktura</em> slajdova predavanja PR4–PR6 i zadržavaju izvorna imena klasa i metoda. Ostale slike su vlastite ilustracije. Gdje slajd crta ostvarenje sučelja punom crtom, ovdje je isprekidana — to je UML-ispravno i tako se očekuje na ispitu.</p>
+  <p><strong>Dijagrami:</strong> Svih 23 obrazaca ima UML dijagram klasa sa <em>Struktura</em> slajdova predavanja PR4–PR6, uz izvorna imena klasa i metoda; gdje slajd nije crtao punu strukturu, dijagram je standardna GoF struktura s uobičajenim imenima uloga (<code>Context</code>, <code>Handler</code>, <code>Component</code>…) — ista imena kakva ispit koristi u pitanju „povežite uloge s elementima“. Ostale slike su vlastite ilustracije. Gdje slajd crta ostvarenje sučelja punom crtom, ovdje je isprekidana — to je UML-ispravno i tako se očekuje na ispitu.</p>
   <p><strong>Odgovori na ispitna pitanja nisu službeni</strong> — uz materijale ne postoji rješenje. Vidi upozorenje na početku odjeljka <a href="#ispit">Ispit</a>.</p>
 </footer>
 
